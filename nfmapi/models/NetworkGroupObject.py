@@ -7,7 +7,7 @@ class NetworkGroupObject(db.Model):
     uuid = db.Column(db.String(32), primary_key=True, default=str(uuid4()))
     name = db.Column(db.String(250))
     description = db.Column(db.Text(), nullable=True)
-    children = db.Column(db.Text)
+    children = db.Column(db.PickleType())
     ctime = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     mtime = db.Column(db.DateTime, onupdate=datetime.utcnow)
     
