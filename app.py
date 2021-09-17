@@ -20,7 +20,10 @@ from nfmapi.resources import submodules as resources
 
 for resource in resources:
     res = import_module("nfmapi.resources.{}".format(resource))
-    api.add_resource(getattr(res, resource), res.path, endpoint=res.endpoint)
+    path = res.path
+    if path[:1] != "/":
+        path = "/{}".format(path)
+    api.add_resource(getattr(res, resource), path, endpoint=res.endpoint)
 
 def gen_url(path):
     if path[:1] != "/":

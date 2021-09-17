@@ -8,8 +8,15 @@ for module in os.listdir(os.path.dirname(__file__)):
         continue
     modulename = module[:-3]
     mod = import_module("{}.{}".format(__name__, modulename))
-    globals()[modulename] = getattr(mod, modulename)
-    submodules.append(modulename)
+    try:
+        globals()[modulename] = getattr(mod, modulename)
+        # force a check for the required attributes
+        getattr(mod, "path")
+        getattr(mod, "endpoint")
+        
+        submodules.append(modulename)
+    except AttributeError:
+        pass
 del module, mod
 
 __all__ = submodules
