@@ -25,9 +25,9 @@ class HostObjectCollectionResource(BaseResource):
                   type: array
                   items: HostObjectSchema
         """
-        certs = HostObject.query.all()
+        objects = HostObject.query.all()
         schema = HostObjectSchema(many = True)
-        return schema.dump(certs)
+        return schema.dump(objects)
 
     def post(self):
         """Create host object
@@ -71,18 +71,18 @@ class HostObjectCollectionResource(BaseResource):
             return {"message": "an IPv4 or IPv6 address must be specified"}, 422
         
 
-        host_object = HostObject()
+        object = HostObject()
         error = False
         messages = []
         for key in data:
             try:
-                setattr(host_object, key, data[key])
+                setattr(object, key, data[key])
             except ValueError as e:
                 error = True
                 messages.append(e.args[0])
         if error:
             return {"messages": messages}, 422
-        db.session.add(host_object)
+        db.session.add(object)
         db.session.commit()
-        db.session.refresh(host_object)
-        return HostObjectSchema().dump(host_object)
+        db.session.refresh(object)
+        return HostObjectSchema().dump(object)

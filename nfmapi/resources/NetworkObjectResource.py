@@ -28,9 +28,9 @@ class NetworkObjectResource(BaseResource):
               application/json:
                 schema: NetworkObjectSchema
         """
-        cert = NetworkObject.query.filter_by(uuid=uuid).first_or_404()
+        object = NetworkObject.query.filter_by(uuid=uuid).first_or_404()
         
-        return NetworkObjectSchema().dump(cert)
+        return NetworkObjectSchema().dump(object)
         
     def patch(self, uuid):
         """Update Network Object

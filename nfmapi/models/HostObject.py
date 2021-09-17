@@ -36,10 +36,10 @@ class HostObject(db.Model):
     @validates('name')
     def validate_name(self, key, value):
         from .NetworkObject import NetworkObject
-        from .GroupObject import GroupObject
+        from .NetworkGroupObject import NetworkGroupObject
         host = HostObject.query.filter_by(name=value).first()
         network = NetworkObject.query.filter_by(name=value).first()
-        group = GroupObject.query.filter_by(name=value).first()
+        group = NetworkGroupObject.query.filter_by(name=value).first()
         if host or network or group:
             raise ValueError("Name must be unique")
         return value

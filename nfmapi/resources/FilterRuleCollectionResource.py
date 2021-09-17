@@ -1,68 +1,80 @@
-from nfmapi.models import ServiceObject
-from nfmapi.schemata import ServiceObjectSchema
+from nfmapi.models import FilterRule
+from nfmapi.schemata import FilterRuleSchema
 from marshmallow.exceptions import ValidationError
 from .BaseResource import BaseResource
 from flask import request
 from app import db
 from uuid import uuid4
 
-path = 'service_objects'
-endpoint = 'service_objects'
+path = 'filter_rules'
+endpoint = 'filter_rules'
 
 
-class ServiceObjectCollectionResource(BaseResource):
+class FilterRuleCollectionResource(BaseResource):
     def get(self):
-        """List Service Objects
+        """List Filter Rules
         ---
-        description: List all service objects
+        description: List all filter rules
         tags:
-          - Service Objects
+          - Filter Rules
         responses:
           200:
             content:
               application/json:
                 schema: 
                   type: array
-                  items: ServiceObjectSchema
+                  items: FilterRuleSchema
         """
-        objects = ServiceObject.query.all()
-        schema = ServiceObjectSchema(many = True)
+        objects = FilterRule.query.all()
+        schema = FilterRuleSchema(many = True)
         return schema.dump(objects)
 
     def post(self):
-        """Create service object
+        """Create filter rule
         ---
-        description: Create a service object
+        description: Create a filter rule
         tags:
-          - Service Objects
+          - Filter Rules
         requestBody:
           content:
             application/json:
-              schema: ServiceObjectSchema
+              schema: FilterRuleSchema
         responses:
           201:
             description: Created
             content:
               application/json:
-                schema: ServiceObjectSchema
+                schema: FilterRuleSchema
           422:
             description: Unprocessable Entity
             content:
               application/json:
                 schema: MessageSchema
         """
-        messages = []
         json_data = request.get_json()
         try:
-            data = ServiceObjectSchema().load(json_data)
+            data = FilterRuleSchema().load(json_data)
         except ValidationError as err:
-            for msg in err.messages:
-                messages.append("{}: {}".format(msg, err.messages[msg]))
-            return {"messages": messages}, 422
+            return err.messages, 422
         
 
-        object = ServiceObject()
+        try:
+            data["source"]
+        except KeyError:
+            data["source"] = None
+        try:
+            data["destination"]
+        except KeyError:
+            data["destination"] = None
+        try:
+            data["service"]
+        except KeyError:
+            data["service"] = None
+        
+
+        object = FilterRule()
         error = False
+        messages = []
         for key in data:
             try:
                 setattr(object, key, data[key])
@@ -74,4 +86,4 @@ class ServiceObjectCollectionResource(BaseResource):
         db.session.add(object)
         db.session.commit()
         db.session.refresh(object)
-        return ServiceObjectSchema().dump(object)
+        return FilterRuleSchema().dump(object)

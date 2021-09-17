@@ -1,20 +1,20 @@
-from nfmapi.models import HostObject
-from nfmapi.schemata import HostObjectSchema, HostObjectPatchSchema
+from nfmapi.models import FilterRule
+from nfmapi.schemata import FilterRuleSchema, FilterRulePatchSchema
 from marshmallow.exceptions import ValidationError
 from .BaseResource import BaseResource
 from flask import request
 from app import db
 
-path = 'host_objects/<uuid>'
-endpoint ='host_object_detail'
+path = 'filter_rules/<uuid>'
+endpoint ='filter_rule_detail'
 
-class HostObjectResource(BaseResource):
+class FilterRuleResource(BaseResource):
     def get(self, uuid):
-        """Get Host Object
+        """Get Filter Rule
         ---
-        description: Get a specific host object
+        description: Get a specific filter rule
         tags:
-          - Host Objects
+          - Filter Rules
         parameters:
           - name: uuid
             in: path
@@ -26,18 +26,18 @@ class HostObjectResource(BaseResource):
             description: OK
             content:
               application/json:
-                schema: HostObjectSchema
+                schema: FilterRuleSchema
         """
-        object = HostObject.query.filter_by(uuid=uuid).first_or_404()
+        object = FilterRule.query.filter_by(uuid=uuid).first_or_404()
         
-        return HostObjectSchema().dump(object)
+        return FilterRuleSchema().dump(object)
         
     def patch(self, uuid):
-        """Update Host Object
+        """Update Filter Rule
         ---
-        description: Update a host object
+        description: Update a filter rule
         tags:
-          - Host Objects
+          - Filter Rules
         parameters:
           - name: uuid
             in: path
@@ -47,13 +47,13 @@ class HostObjectResource(BaseResource):
         requestBody:
           content:
             application/json:
-              schema: HostObjectPatchSchema
+              schema: FilterRulePatchSchema
         responses:
           200:
             description: OK
             content:
               application/json:
-                schema: HostObjectSchema
+                schema: FilterRuleSchema
           422:
             description: Unprocessable Entity
             content:
@@ -63,25 +63,25 @@ class HostObjectResource(BaseResource):
         json_data = request.get_json()
 
         try:
-            data = HostObjectPatchSchema().load(json_data)
+            data = FilterRulePatchSchema().load(json_data)
         except ValidationError as err:
             return err.messages, 422
 
-        object = HostObject.query.filter_by(uuid=uuid).first_or_404()
+        object = FilterRule.query.filter_by(uuid=uuid).first_or_404()
         
         for key in data:
             setattr(object, key, data[key])
 
         db.session.commit()
         db.session.refresh(object)
-        return HostObjectSchema().dump(object)
+        return FilterRuleSchema().dump(object)
         
     def delete(self, uuid):
-        """Delete Host Object
+        """Delete Filter Rule
         ---
-        description: Delete a host object
+        description: Delete a filter rule
         tags:
-          - Host Objects
+          - Filter Rules
         parameters:
           - name: uuid
             in: path
@@ -92,7 +92,7 @@ class HostObjectResource(BaseResource):
           204:
             description: No Content
         """
-        object = HostObject.query.filter_by(uuid=uuid).first_or_404()
+        object = FilterRule.query.filter_by(uuid=uuid).first_or_404()
         db.session.delete(object)
         db.session.commit()
         return {}, 204

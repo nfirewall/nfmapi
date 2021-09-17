@@ -28,9 +28,9 @@ class ServiceObjectResource(BaseResource):
               application/json:
                 schema: ServiceObjectSchema
         """
-        cert = ServiceObject.query.filter_by(uuid=uuid).first_or_404()
+        object = ServiceObject.query.filter_by(uuid=uuid).first_or_404()
         
-        return ServiceObjectSchema().dump(cert)
+        return ServiceObjectSchema().dump(object)
         
     def patch(self, uuid):
         """Update Service Object

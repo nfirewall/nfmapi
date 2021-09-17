@@ -38,8 +38,8 @@ class ServiceObject(db.Model):
 
     @validates('name')
     def validate_name(self, key, value):
-        from .GroupObject import GroupObject
-        group = GroupObject.query.filter_by(name=value).first()
+        from .ServiceGroupObject import ServiceGroupObject
+        group = ServiceGroupObject.query.filter_by(name=value).first()
         service = ServiceObject.query.filter_by(name=value).first()
         if group or service:
             raise ValueError("Name must be unique")
