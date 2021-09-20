@@ -1,20 +1,20 @@
-from nfmapi.models import ServiceObject
-from nfmapi.schemata import ServiceObjectSchema, ServiceObjectPatchSchema
+from nfmapi.models import NetworkGroupObject
+from nfmapi.schemata import NetworkGroupObjectSchema, NetworkGroupObjectPatchSchema
 from marshmallow.exceptions import ValidationError
 from .BaseResource import BaseResource
 from flask import request
 from app import db
 
-path = 'service_objects/<uuid>'
-endpoint ='service_object_detail'
+path = 'network_groups/<uuid>'
+endpoint ='network_group_detail'
 
-class ServiceObjectResource(BaseResource):
+class NetworkGroupObjectResource(BaseResource):
     def get(self, uuid):
-        """Get Service Object
+        """Get network group
         ---
-        description: Get a specific service object
+        description: Get a network group
         tags:
-          - Service Objects
+          - Network Groups
         parameters:
           - name: uuid
             in: path
@@ -26,18 +26,18 @@ class ServiceObjectResource(BaseResource):
             description: OK
             content:
               application/json:
-                schema: ServiceObjectSchema
+                schema: NetworkGroupObjectSchema
         """
-        object = ServiceObject.query.filter_by(uuid=uuid).first_or_404()
+        object = NetworkGroupObject.query.filter_by(uuid=uuid).first_or_404()
         
-        return ServiceObjectSchema().dump(object)
+        return NetworkGroupObjectSchema().dump(object)
         
     def patch(self, uuid):
-        """Update Service Object
+        """Update network group
         ---
-        description: Update a service object
+        description: Update a network group
         tags:
-          - Service Objects
+          - Network Groups
         parameters:
           - name: uuid
             in: path
@@ -47,13 +47,13 @@ class ServiceObjectResource(BaseResource):
         requestBody:
           content:
             application/json:
-              schema: ServiceObjectPatchSchema
+              schema: NetworkGroupObjectPatchSchema
         responses:
           200:
             description: OK
             content:
               application/json:
-                schema: ServiceObjectSchema
+                schema: NetworkGroupObjectSchema
           422:
             description: Unprocessable Entity
             content:
@@ -63,11 +63,11 @@ class ServiceObjectResource(BaseResource):
         json_data = request.get_json()
 
         try:
-            data = ServiceObjectPatchSchema().load(json_data)
+            data = NetworkGroupObjectPatchSchema().load(json_data)
         except ValidationError as err:
             return err.messages, 422
 
-        object = ServiceObject.query.filter_by(uuid=uuid).first_or_404()
+        object = NetworkGroupObject.query.filter_by(uuid=uuid).first_or_404()
         
         messages = []
         error = False
@@ -83,14 +83,14 @@ class ServiceObjectResource(BaseResource):
 
         db.session.commit()
         db.session.refresh(object)
-        return ServiceObjectSchema().dump(object)
+        return NetworkGroupObjectSchema().dump(object)
         
     def delete(self, uuid):
-        """Delete Service Object
+        """Delete network group
         ---
-        description: Delete a service object
+        description: Delete a network group
         tags:
-          - Service Objects
+          - Network Groups
         parameters:
           - name: uuid
             in: path
@@ -101,7 +101,7 @@ class ServiceObjectResource(BaseResource):
           204:
             description: No Content
         """
-        object = ServiceObject.query.filter_by(uuid=uuid).first_or_404()
+        object = NetworkGroupObject.query.filter_by(uuid=uuid).first_or_404()
         db.session.delete(object)
         db.session.commit()
         return {}, 204

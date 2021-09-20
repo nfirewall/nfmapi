@@ -69,8 +69,17 @@ class NetworkObjectResource(BaseResource):
 
         object = NetworkObject.query.filter_by(uuid=uuid).first_or_404()
         
+        messages = []
+        error = False
+
         for key in data:
-            setattr(object, key, data[key])
+            try:
+                setattr(object, key, data[key])
+            except ValueError as e:
+                error = True
+                messages.append(e.args[0])
+        if error:
+            return {"messages": messages}, 422
 
         db.session.commit()
         db.session.refresh(object)

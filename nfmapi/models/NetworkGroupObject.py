@@ -21,3 +21,16 @@ class NetworkGroupObject(db.Model):
         if host or network or group:
             raise ValueError("Name must be unique")
         return value
+    
+    @validates('children')
+    def validate_children(self, key, value):
+        from .HostObject import HostObject
+        from .NetworkObject import NetworkObject
+        for child in value:
+            host = HostObject.query.filter_by(uuid=child).first()
+            network = NetworkObject.query.filter_by(uuid=child).first()
+            group = NetworkGroupObject.query.filter_by(uuid=child).first()
+            if host or network or group:
+                return value
+            raise ValueError("Object not found: {}".format(value))
+            
