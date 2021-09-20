@@ -19,3 +19,13 @@ class ServiceGroupObject(db.Model):
         if service or group:
             raise ValueError("Name must be unique")
         return value
+    
+    @validates('children')
+    def validate_children(self, key, value):
+        from .ServiceObject import ServiceObject
+        for child in value:
+            service = ServiceObject.query.filter_by(name=value).first()
+            group = ServiceGroupObject.query.filter_by(name=value).first()
+            if service or group:
+                return value
+            raise ValueError("Object not found: {}".format(value))
