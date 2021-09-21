@@ -12,7 +12,7 @@ class NetworkObjectResource(BaseResource):
     def get(self, uuid):
         """Get Network Object
         ---
-        description: Get a specific network object
+        description: Get a network object
         tags:
           - Network Objects
         parameters:

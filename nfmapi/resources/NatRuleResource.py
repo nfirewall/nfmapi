@@ -12,7 +12,7 @@ class NatRuleResource(BaseResource):
     def get(self, uuid):
         """Get Nat Rule
         ---
-        description: Get a specific nat rule
+        description: Get a nat rule
         tags:
           - Nat Rules
         parameters:

@@ -12,7 +12,7 @@ class FilterRuleResource(BaseResource):
     def get(self, uuid):
         """Get Filter Rule
         ---
-        description: Get a specific filter rule
+        description: Get a filter rule
         tags:
           - Filter Rules
         parameters:

@@ -1,20 +1,20 @@
-from nfmapi.models import HostObject
-from nfmapi.schemata import HostObjectSchema, HostObjectPatchSchema
+from nfmapi.models import Policy
+from nfmapi.schemata import PolicySchema, PolicyPatchSchema
 from marshmallow.exceptions import ValidationError
 from .BaseResource import BaseResource
 from flask import request
 from app import db
 
-path = 'host_objects/<uuid>'
-endpoint ='host_object_detail'
+path = 'policies/<uuid>'
+endpoint ='policy_detail'
 
-class HostObjectResource(BaseResource):
+class PolicyResource(BaseResource):
     def get(self, uuid):
-        """Get Host Object
+        """Get policy
         ---
-        description: Get a host object
+        description: Get a policy
         tags:
-          - Host Objects
+          - Policies
         parameters:
           - name: uuid
             in: path
@@ -26,18 +26,18 @@ class HostObjectResource(BaseResource):
             description: OK
             content:
               application/json:
-                schema: HostObjectSchema
+                schema: PolicySchema
         """
-        object = HostObject.query.filter_by(uuid=uuid).first_or_404()
+        object = Policy.query.filter_by(uuid=uuid).first_or_404()
         
-        return HostObjectSchema().dump(object)
+        return PolicySchema().dump(object)
         
     def patch(self, uuid):
-        """Update Host Object
+        """Update policy
         ---
-        description: Update a host object
+        description: Update a policy
         tags:
-          - Host Objects
+          - Policies
         parameters:
           - name: uuid
             in: path
@@ -47,13 +47,13 @@ class HostObjectResource(BaseResource):
         requestBody:
           content:
             application/json:
-              schema: HostObjectPatchSchema
+              schema: PolicyPatchSchema
         responses:
           200:
             description: OK
             content:
               application/json:
-                schema: HostObjectSchema
+                schema: PolicySchema
           422:
             description: Unprocessable Entity
             content:
@@ -63,11 +63,11 @@ class HostObjectResource(BaseResource):
         json_data = request.get_json()
 
         try:
-            data = HostObjectPatchSchema().load(json_data)
+            data = PolicyPatchSchema().load(json_data)
         except ValidationError as err:
             return err.messages, 422
 
-        object = HostObject.query.filter_by(uuid=uuid).first_or_404()
+        object = Policy.query.filter_by(uuid=uuid).first_or_404()
         
         messages = []
         error = False
@@ -83,14 +83,14 @@ class HostObjectResource(BaseResource):
 
         db.session.commit()
         db.session.refresh(object)
-        return HostObjectSchema().dump(object)
+        return PolicySchema().dump(object)
         
     def delete(self, uuid):
-        """Delete Host Object
+        """Delete policy
         ---
-        description: Delete a host object
+        description: Delete a policy
         tags:
-          - Host Objects
+          - Policies
         parameters:
           - name: uuid
             in: path
@@ -101,7 +101,7 @@ class HostObjectResource(BaseResource):
           204:
             description: No Content
         """
-        object = HostObject.query.filter_by(uuid=uuid).first_or_404()
+        object = Policy.query.filter_by(uuid=uuid).first_or_404()
         db.session.delete(object)
         db.session.commit()
         return {}, 204

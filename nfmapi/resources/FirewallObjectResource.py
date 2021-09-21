@@ -1,20 +1,20 @@
-from nfmapi.models import HostObject
-from nfmapi.schemata import HostObjectSchema, HostObjectPatchSchema
+from nfmapi.models import FirewallObject
+from nfmapi.schemata import FirewallObjectSchema, FirewallObjectPatchSchema
 from marshmallow.exceptions import ValidationError
 from .BaseResource import BaseResource
 from flask import request
 from app import db
 
-path = 'host_objects/<uuid>'
-endpoint ='host_object_detail'
+path = 'firewalls/<uuid>'
+endpoint ='firewall_detail'
 
-class HostObjectResource(BaseResource):
+class FirewallObjectResource(BaseResource):
     def get(self, uuid):
-        """Get Host Object
+        """Get firewall object
         ---
-        description: Get a host object
+        description: Get a firewall object
         tags:
-          - Host Objects
+          - Firewalls
         parameters:
           - name: uuid
             in: path
@@ -26,18 +26,18 @@ class HostObjectResource(BaseResource):
             description: OK
             content:
               application/json:
-                schema: HostObjectSchema
+                schema: FirewallObjectSchema
         """
-        object = HostObject.query.filter_by(uuid=uuid).first_or_404()
+        object = FirewallObject.query.filter_by(uuid=uuid).first_or_404()
         
-        return HostObjectSchema().dump(object)
+        return FirewallObjectSchema().dump(object)
         
     def patch(self, uuid):
-        """Update Host Object
+        """Update firewall object
         ---
-        description: Update a host object
+        description: Update a firewall object
         tags:
-          - Host Objects
+          - Firewalls
         parameters:
           - name: uuid
             in: path
@@ -47,13 +47,13 @@ class HostObjectResource(BaseResource):
         requestBody:
           content:
             application/json:
-              schema: HostObjectPatchSchema
+              schema: FirewallObjectPatchSchema
         responses:
           200:
             description: OK
             content:
               application/json:
-                schema: HostObjectSchema
+                schema: FirewallObjectSchema
           422:
             description: Unprocessable Entity
             content:
@@ -63,11 +63,11 @@ class HostObjectResource(BaseResource):
         json_data = request.get_json()
 
         try:
-            data = HostObjectPatchSchema().load(json_data)
+            data = FirewallObjectPatchSchema().load(json_data)
         except ValidationError as err:
             return err.messages, 422
 
-        object = HostObject.query.filter_by(uuid=uuid).first_or_404()
+        object = FirewallObject.query.filter_by(uuid=uuid).first_or_404()
         
         messages = []
         error = False
@@ -83,14 +83,14 @@ class HostObjectResource(BaseResource):
 
         db.session.commit()
         db.session.refresh(object)
-        return HostObjectSchema().dump(object)
+        return FirewallObjectSchema().dump(object)
         
     def delete(self, uuid):
-        """Delete Host Object
+        """Delete firewall object
         ---
-        description: Delete a host object
+        description: Delete a firewall object
         tags:
-          - Host Objects
+          - Firewalls
         parameters:
           - name: uuid
             in: path
@@ -101,7 +101,7 @@ class HostObjectResource(BaseResource):
           204:
             description: No Content
         """
-        object = HostObject.query.filter_by(uuid=uuid).first_or_404()
+        object = FirewallObject.query.filter_by(uuid=uuid).first_or_404()
         db.session.delete(object)
         db.session.commit()
         return {}, 204

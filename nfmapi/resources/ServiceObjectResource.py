@@ -12,7 +12,7 @@ class ServiceObjectResource(BaseResource):
     def get(self, uuid):
         """Get Service Object
         ---
-        description: Get a specific service object
+        description: Get a service object
         tags:
           - Service Objects
         parameters:
