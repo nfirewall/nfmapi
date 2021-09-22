@@ -1,4 +1,4 @@
-from marshmallow import fields, Schema
+from marshmallow import fields, validate
 
 from app import ma
 from nfmapi.models import NatRule
@@ -15,6 +15,6 @@ class NatRuleSchema(ma.SQLAlchemyAutoSchema):
     destination = fields.UUID(required=False, description="Destination object UUID")
     service = fields.UUID(required=False, description="Service UUID")
     target = fields.String(required=True, description="Target address to which to NAT")
-    type = fields.String(required=True, description="Type of NAT (hide, dnat, snat)")
+    type = fields.String(required=True, description="Type of NAT", validate=validate.OneOf(["hide", "dnat", "snat"]))
     ctime = fields.DateTime(required=True, description="Creation time", dump_only=True)
     mtime = fields.DateTime(required=True, description="Modification time", dump_only=True)

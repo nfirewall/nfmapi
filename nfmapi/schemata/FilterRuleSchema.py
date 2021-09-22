@@ -1,4 +1,4 @@
-from marshmallow import fields, Schema
+from marshmallow import fields, validate
 
 from app import ma
 from nfmapi.models import FilterRule
@@ -14,6 +14,6 @@ class FilterRuleSchema(ma.SQLAlchemyAutoSchema):
     source = fields.List(fields.UUID(), required=False, description="list of Source object UUIDs")
     destination = fields.List(fields.UUID(), required=False, description="list of Destination object UUIDs")
     service = fields.List(fields.UUID(), required=False, description="list of Service UUIDs")
-    action = fields.String(required=True, description="Action to apply")
+    action = fields.String(required=True, description="Action to apply", validate=validate.OneOf(["accept", "drop"]))
     ctime = fields.DateTime(required=True, description="Creation time", dump_only=True)
     mtime = fields.DateTime(required=True, description="Modification time", dump_only=True)
