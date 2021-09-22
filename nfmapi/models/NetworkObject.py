@@ -5,7 +5,7 @@ from ipaddress import ip_network
 from sqlalchemy.orm import validates
 
 class NetworkObject(db.Model):
-    uuid = db.Column(db.String(32), primary_key=True, default=str(uuid4()))
+    uuid = db.Column(db.String(36), primary_key=True, default=lambda: str(uuid4()))
     name = db.Column(db.String(250))
     description = db.Column(db.Text(), nullable=True)
     ipv4 = db.Column(db.String(19), nullable=True)

@@ -4,7 +4,7 @@ from datetime import datetime
 from sqlalchemy.orm import validates
 
 class ServiceObject(db.Model):
-    uuid = db.Column(db.String(32), primary_key=True, default=str(uuid4()))
+    uuid = db.Column(db.String(36), primary_key=True, default=lambda: str(uuid4()))
     name = db.Column(db.String(250), nullable=False)
     description = db.Column(db.Text(), nullable=True)
     protocol = db.Column(db.String(3), nullable=False)

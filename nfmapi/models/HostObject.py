@@ -5,7 +5,7 @@ from ipaddress import ip_address
 from sqlalchemy.orm import validates
 
 class HostObject(db.Model):
-    uuid = db.Column(db.String(32), primary_key=True, default=str(uuid4()))
+    uuid = db.Column(db.String(36), primary_key=True, default=lambda: str(uuid4()))
     name = db.Column(db.String(250), nullable=False)
     description = db.Column(db.Text(), nullable=True)
     ipv4 = db.Column(db.String(19), nullable=True)
