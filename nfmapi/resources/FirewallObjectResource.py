@@ -5,7 +5,7 @@ from .BaseResource import BaseResource
 from flask import request
 from app import db
 
-path = 'firewalls/<uuid>'
+path = 'firewall_objects/<uuid>'
 endpoint ='firewall_detail'
 
 class FirewallObjectResource(BaseResource):

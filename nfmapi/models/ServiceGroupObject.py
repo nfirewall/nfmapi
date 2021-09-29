@@ -24,8 +24,8 @@ class ServiceGroupObject(db.Model):
     def validate_children(self, key, value):
         from .ServiceObject import ServiceObject
         for child in value:
-            service = ServiceObject.query.filter_by(name=value).first()
-            group = ServiceGroupObject.query.filter_by(name=value).first()
+            service = ServiceObject.query.filter_by(uuid=child).first()
+            group = ServiceGroupObject.query.filter_by(uuid=child).first()
             if service or group:
                 return value
-            raise ValueError("Object not found: {}".format(value))
+            raise ValueError("Object not found: {}".format(child))

@@ -44,7 +44,7 @@ class NatRule(db.Model):
         network = NetworkObject.query.filter_by(uuid=value).first()
         group = NetworkGroupObject.query.filter_by(uuid=value).first()
         if host is None and network is None and group is None:
-            raise ValueError("Invalid source: {}".format(value))
+            raise ValueError("Invalid destination: {}".format(value))
         
         return value
         

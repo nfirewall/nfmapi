@@ -4,7 +4,7 @@ from marshmallow.exceptions import ValidationError
 from .BaseResource import BaseResource
 from flask import request
 from app import db
-from uuid import uuid4
+from sqlalchemy.exc import IntegrityError
 
 path = 'firewall_objects'
 endpoint = 'firewall_objects'
@@ -55,7 +55,7 @@ class FirewallObjectCollectionResource(BaseResource):
         try:
             data = FirewallObjectSchema().load(json_data)
         except ValidationError as err:
-            return err.messages, 422
+            return {"messages": err.messages}, 422
         
         object = FirewallObject()
         error = False
@@ -68,7 +68,10 @@ class FirewallObjectCollectionResource(BaseResource):
                 messages.append(e.args[0])
         if error:
             return {"messages": messages}, 422
-        db.session.add(object)
-        db.session.commit()
-        db.session.refresh(object)
+        try:
+            db.session.add(object)
+            db.session.commit()
+            db.session.refresh(object)
+        except IntegrityError as e:
+            return {"messages": ["Invalid request: SQL integrity failed"]}, 422
         return FirewallObjectSchema().dump(object)
