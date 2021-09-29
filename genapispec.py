@@ -6,21 +6,21 @@ from app import app
 from pprint import pprint
 
 from importlib import import_module
-from nfmapi.schemata import submodules as schemata
+from nfmanagementapi.schemata import submodules as schemata
 from app import gen_url
 from flask import Flask
 
 
-from nfmapi.resources import submodules as resources
+from nfmanagementapi.resources import submodules as resources
 
 def gen_spec():
     app = Flask(__name__)
     spec = APISpec(
-        title="nfmapi",
+        title="nfmanagementapi",
         version="1.0.0",
         openapi_version="3.0.2",
         info=dict(
-            description="nfmapi.\n"
+            description="nfmanagementapi.\n"
             ""
             "# Introduction\n"
             "This API provides an entry point for management of nfirewall",
@@ -37,12 +37,12 @@ def gen_spec():
     )
 
     for schema in schemata:
-        sch = import_module("nfmapi.schemata.{}".format(schema))
+        sch = import_module("nfmanagementapi.schemata.{}".format(schema))
         spec.components.schema(schema, schema=getattr(sch, schema))
 
     resource_views = {}
     for resource in resources:
-        res = import_module("nfmapi.resources.{}".format(resource))
+        res = import_module("nfmanagementapi.resources.{}".format(resource))
         try:
             if (res.exclude_from_doc):
                 continue

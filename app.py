@@ -16,10 +16,10 @@ migrate = Migrate(app, db)
 api = Api(app)
 ma = Marshmallow(app)
 
-from nfmapi.resources import submodules as resources
+from nfmanagementapi.resources import submodules as resources
 
 for resource in resources:
-    res = import_module("nfmapi.resources.{}".format(resource))
+    res = import_module("nfmanagementapi.resources.{}".format(resource))
     path = res.path
     if path[:1] != "/":
         path = "/{}".format(path)
